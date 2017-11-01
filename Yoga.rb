@@ -38,24 +38,9 @@ def progress_bar
     print "-"
     sleep 0.1
   end
-
 end
 
-
-puts "Welcome to our cosy Yoga Shop!\nWe have the following departments:\n"
-
-def shopping
-#showing departments
-  @departments.each_with_index {|department, index| puts "#{index+1}: #{department}"}
-  puts "Please select the department you wish to visit(1-4)"
-#store customer's choice
-  @choice1 = gets.to_i
-#show what is in the department
-  @products[@departments[@choice1-1]].each do |value|
-    puts "#{value[:name]}, price: #{value[:price]}$, order number: #{value[:reference_number]}\n"
-  end
-
-  puts "Please select the product you like?\n"
+def product_search
   #user choice of a product - converted to array, each element capitalized, joined back together
   @product_choice = gets.chomp.split(' ').map!{|el|el.capitalize}.join(" ")
   #searching for this product in our department
@@ -67,11 +52,35 @@ def shopping
        counter = 1
      end
    end
+
    if counter == 0
-     puts "Sorry, no such product"
+     puts "Sorry, no such product\nPlease choose again"
+     showing_department
+     product_search
+   else
+     showing_the_cart
    end
-   #showing the cart and total amount
-   showing_the_cart
+ end
+
+def showing_department
+  @products[@departments[@choice1-1]].each do |value|
+    puts "#{value[:name]}, price: #{value[:price]}$, order number: #{value[:reference_number]}\n"
+    puts "Please select the product you like\n"
+  end
+end
+
+puts "Welcome to our cosy Yoga Shop!\nWe have the following departments:\n"
+
+def shopping
+#showing departments
+  @departments.each_with_index {|department, index| puts "#{index+1}: #{department}"}
+  puts "Please select the department you wish to visit(1-4)"
+#store customer's choice
+  @choice1 = gets.to_i
+#show what is in the department
+  showing_department
+
+  product_search
 
    #prompting to continue shopping
    puts "Continue shopping?(Y/N)"

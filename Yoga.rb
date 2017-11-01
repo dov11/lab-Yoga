@@ -46,7 +46,7 @@ def show_departments
     puts "#{value[:name]}, price: #{value[:price]}$, order number: #{value[:reference_number]}"
   end
   puts "Please select the product you like?"
-  @product_choice = gets.chomp.capitalize
+  @product_choice = gets.chomp.split(' ').map!{|el|el.capitalize}.join(" ")
   @products[@departments[@choice1-1]].each do |value|
      if (value.select {|k,v| v==@product_choice} != {})
        @shopping_cart<<value
@@ -54,18 +54,16 @@ def show_departments
    end
    showing_the_cart
    count_total_price
+   puts "Continue shopping?(Y/N)"
+   continue_answer = gets.chomp.capitalize
+   if continue_answer=='Y'
+     show_departments
+   else
+     showing_the_cart
+     count_total_price
+     puts "Thank you for shopping with us"
+   end
+
 end
 
 show_departments
-
-
-puts "Continue shopping?(Y/N)"
-continue_answer = gets.chomp.capitalize
-
-if continue_answer=='Y'
-  show_departments
-else
-  showing_the_cart
-  count_total_price
-  puts "Thank you for shopping with us"
-end

@@ -22,48 +22,70 @@
 }
 
 def showing_the_cart
+progress_bar
+#print "\r"
+#print "\e[J"
+  total = 0
   @shopping_cart.each do |product|
-    puts "#{product[:name]} - #{product[:price]}$"
-  end
-end
-
-def count_total_price
-total = 0
-  @shopping_cart.each do |product|
+    puts "#{product[:name]} - #{product[:price]}$\n"
     total += product[:price]
   end
-  puts "total: #{total}$"
+  puts "-------\nTotal: #{total}$\n********"
 end
-print @shopping_cart
+
+def progress_bar
+  15.times do
+    print "-"
+    sleep 0.1
+  end
+
+end
+
 
 puts "Welcome to our cosy Yoga Shop!\nWe have the following departments:\n"
 
-def show_departments
+def shopping
+#showing departments
   @departments.each_with_index {|department, index| puts "#{index+1}: #{department}"}
   puts "Please select the department you wish to visit(1-4)"
+#store customer's choice
   @choice1 = gets.to_i
+#show what is in the department
   @products[@departments[@choice1-1]].each do |value|
-    puts "#{value[:name]}, price: #{value[:price]}$, order number: #{value[:reference_number]}"
+    puts "#{value[:name]}, price: #{value[:price]}$, order number: #{value[:reference_number]}\n"
   end
-  puts "Please select the product you like?"
+
+  puts "Please select the product you like?\n"
+  #user choice of a product - converted to array, each element capitalized, joined back together
   @product_choice = gets.chomp.split(' ').map!{|el|el.capitalize}.join(" ")
+  #searching for this product in our department
+  counter = 0
   @products[@departments[@choice1-1]].each do |value|
+
      if (value.select {|k,v| v==@product_choice} != {})
        @shopping_cart<<value
+       counter = 1
      end
    end
+   if counter == 0
+     puts "Sorry, no such product"
+   end
+   #showing the cart and total amount
    showing_the_cart
-   count_total_price
+
+   #prompting to continue shopping
    puts "Continue shopping?(Y/N)"
    continue_answer = gets.chomp.capitalize
    if continue_answer=='Y'
-     show_departments
+#restarting if yes
+     shopping
    else
+     #showing the total and cart and thank for shopping
      showing_the_cart
-     count_total_price
+
      puts "Thank you for shopping with us"
    end
 
 end
 
-show_departments
+shopping
